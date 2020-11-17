@@ -2,7 +2,8 @@ const int sensor_pin = A1;     // Soil sensor Pin number
 #define DCwater_pump 8        //Relay Pin Number
 int flowPin = 2;    //This is the input pin on the Arduino
 double flowRate;    //This is the value we intend to calculate.
-volatile int count; //This integer needs to be set as volatile to ensure it updates correctly during the interrupt process.  
+volatile int count; //This integer needs to be set as volatile to ensure it updates correctly during the interrupt process. 
+int i= 1; 
 
 
 void Flow()
@@ -41,10 +42,17 @@ void loop()
      
   if(moisture_percentage < 26){
     digitalWrite(DCwater_pump,LOW);
-    Serial.println("DC Pump is ON Now!!");
+    if(i == 1){
+      Serial.println("DC Pump is ON Now!!");
+      i++;}
   }
   else{
      digitalWrite(DCwater_pump,HIGH);
+     if  (i> 1){
+       Serial.println("DC Pump is OFF Now!!");
+       i = 1;}
+      }  
+  delay(5000);    
   }
-  delay(5000);
-}
+
+
