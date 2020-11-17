@@ -14,7 +14,7 @@ while True:
         if '!' in strline:
             strline = strline.split('!')[0]
         print(strline)
-        if time.time() - now > 10:
+        if (time.time() - now > 10):
             airtable = Airtable('app42vXuBNsAVyqTG', 'Test', 'keyVVJGhlDj5vfPCd')
             if 'Moisture Percentage =' in strline:
                 Value = strline.replace('Moisture Percentage = ', ' ')
@@ -22,14 +22,25 @@ while True:
                 current_time = datetime.now().strftime("%H:%M:%S")
                 records = [{'Value': Value, 'Time': current_time}]
                 airtable.batch_insert(records)
-        elif 'ON' in strline:
+                now = time.time()
+        if 'ON' in strline:
+            flow_time = time.time()
             print("water")
             airtable = Airtable('app42vXuBNsAVyqTG', 'Water', 'keyVVJGhlDj5vfPCd')
             water_time = datetime.now().strftime("%H:%M:%S")
             flow = True
         elif flow == True:
             if 'Flow= ' in strline:
+                print("flow")
                 Flow = strline.replace("Flow= ", " ")
-                records = [{'Time': water_time, 'Flow': Flow}]
-                airtable.batch_insert(records)
+                flow = False
+        elif 'OFF' in strline:
+            print('off')
+            end_time = time.time()
+            airtable = Airtable('app42vXuBNsAVyqTG', 'Water', 'keyVVJGhlDj5vfPCd')
+            end_time = datetime.now().strftime("%H:%M:%S")
+            records = [{'Time': water_time, 'Flow': Flow, 'Endtime': end_time}]
+            airtable.batch_insert(records)
+            
+            
             
